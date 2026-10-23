@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TRUTH CAFE – sample</title>
+<style>
+:root{--bg:#ece6df;--card:#fff;--ink:#2b1d16;--mut:#7a6a60;--pri:#3b2417;--acc:#2f7a4b;--warn:#b3261e;--line:#ddd3c9;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1c130e;--card:#2a1d16;--ink:#f1e8e0;--mut:#b5a395;--pri:#c9a27a;--acc:#5fc183;--warn:#ff8a80;--line:#44332a}}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.4 Georgia,'Times New Roman',serif}
+button,input,select{font:inherit}
+header{background:var(--pri);color:var(--bg);padding:12px 16px}
+header h1{margin:0;font-size:24px;letter-spacing:.14em}header small{opacity:.85}
+nav,.chips{display:flex;gap:6px;padding:10px 0;overflow-x:auto}nav{padding:10px 16px}
+nav button,.btn,.chips button{min-height:46px;padding:0 16px;border:2px solid var(--pri);border-radius:10px;background:transparent;color:var(--ink);cursor:pointer;white-space:nowrap}
+nav button[aria-selected=true],.btn.p,.chips button.on{background:var(--pri);color:var(--bg)}
+.btn.g{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:700}.btn.d{border-color:var(--warn);color:var(--warn)}
+main{max-width:980px;margin:auto;padding:0 16px 40px}
+section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+h2{margin:0 0 10px;font-size:19px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:14px}
+.kpis div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px}
+.kpis span{display:block;color:var(--mut);font-size:14px}.kpis b{font-size:22px}
+.menu{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.menu button{min-height:92px;border:2px solid var(--pri);border-radius:12px;background:var(--card);color:var(--ink);cursor:pointer;padding:8px}
+.menu b{display:block}.menu small{color:var(--mut)}
+table{width:100%;border-collapse:collapse}th,td{padding:8px 6px;text-align:left;border-bottom:1px solid var(--line)}
+.scroll{overflow-x:auto}.low{color:var(--warn);font-weight:700}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+input,select{min-height:46px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);max-width:100%}
+.msg{background:var(--bg);border-left:5px solid var(--acc);padding:10px 12px;border-radius:6px;margin-top:10px}.msg.e{border-color:var(--warn)}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+</style></head>
+<body>
+<header><h1>TRUTH CAFE</h1><small>Sample: your real menu and prices. Add ingredients, recipes and stock yourself. Data stays in this browser.</small></header>
+<nav role="tablist" id="nav"></nav><main id="app"></main>
+<script>
+const MENU=[["Avocado Juice", "Juices", 260], ["Papaya Juice", "Juices", 260], ["Pineapple Juice", "Juices", 260], ["Watermelon Juice", "Juices", 260], ["Mango Juice", "Juices", 290], ["Strawberry Juice", "Juices", 290], ["Mixed Juice", "Juices", 290], ["Mango Strawberry Shake", "Shakes", 290], ["Banana Milk Shake", "Shakes", 280], ["Chocolate Milk Shake", "Shakes", 290], ["Strawberry Mojito", "Mojito", 240], ["Mint Mojito", "Mojito", 220], ["Lemon Mojito", "Mojito", 220], ["Pineapple Mojito", "Mojito", 220], ["Watermelon Mojito", "Mojito", 220], ["Ginger Cinnamon Mojito", "Mojito", 230], ["Truth Special Mojito", "Mojito", 280], ["Soft Drink", "Soft Drinks", 90], ["Ambo Water", "Soft Drinks", 90], ["Water (1 Litre)", "Soft Drinks", 80], ["Water (1/2 Litre)", "Soft Drinks", 50], ["Tea", "Hot Beverages", 50], ["Traditional Coffee", "Hot Beverages", 70], ["Coffee", "Hot Beverages", 90], ["Spice", "Hot Beverages", 80], ["Green Tea", "Hot Beverages", 80], ["Ginger Tea", "Hot Beverages", 80], ["Hibiscus Tea", "Hot Beverages", 80], ["Milk", "Hot Beverages", 120], ["Milk with Coffee", "Hot Beverages", 150], ["Peanut (Lewz) Tea", "Hot Beverages", 140], ["Macchiato", "Hot Beverages", 120], ["Double Macchiato", "Hot Beverages", 210], ["Fasting Macchiato", "Hot Beverages", 180], ["Cappuccino", "Hot Beverages", 180], ["Cafe Latte", "Hot Beverages", 220], ["Hot Chocolate", "Hot Beverages", 180], ["Special Tea", "Hot Beverages", 170], ["Ginger with Honey", "Hot Beverages", 120], ["Caramel Latte", "Hot Beverages", 220], ["Iced Latte", "Cold Beverages", 240], ["Ice Coffee", "Cold Beverages", 160], ["Ice Tea", "Cold Beverages", 140], ["Ice Caramel Latte", "Cold Beverages", 280], ["Iced Fasting Latte", "Cold Beverages", 290], ["Iced Cinnamon Coffee", "Cold Beverages", 190], ["Iced Cafe Latte", "Cold Beverages", 260], ["Mayonnaise", "Extras", 70], ["Cheese", "Extras", 140], ["Tuna", "Extras", 130], ["Bread", "Extras", 25], ["Honey", "Extras", 50], ["Egg", "Extras", 40], ["Takeaway Coffee Cup", "Extras", 20], ["Takeaway Pizza", "Extras", 70], ["Takeaway Aluminium Box", "Extras", 50], ["Takeaway Juice Cup", "Extras", 30], ["Normal Fetira", "Breakfast", 260], ["Special Fetira", "Breakfast", 310], ["Scrambled Egg", "Breakfast", 280], ["Chicken Scrambled Egg", "Breakfast", 450], ["Normal Omelet", "Breakfast", 290], ["Special Omelet", "Breakfast", 390], ["Pan Cake", "Breakfast", 290], ["Waffle", "Breakfast", 310], ["Classic Full", "Breakfast", 270], ["Special Full", "Breakfast", 330], ["Normal Chechebsa", "Breakfast", 240], ["Special Chechebsa", "Breakfast", 280], ["Truth Special Breakfast", "Breakfast", 520], ["Vegetable Wrap", "Wraps", 310], ["Avocado Wrap", "Wraps", 360], ["Beef Wrap", "Wraps", 460], ["Chicken Wrap", "Wraps", 490], ["Truth Special Wrap", "Wraps", 560], ["Vegetable Sandwich", "Sandwiches", 330], ["Egg Sandwich", "Sandwiches", 360], ["Tuna Sandwich", "Sandwiches", 440], ["Beef Sandwich", "Sandwiches", 490], ["Chicken Sandwich", "Sandwiches", 520], ["Club Sandwich", "Sandwiches", 590], ["Egg Fried Rice", "Rice", 390], ["Rice with Vegetable", "Rice", 340], ["Chicken Fried Rice", "Rice", 490], ["Beef Burger", "Burgers", 510], ["Chicken Burger", "Burgers", 540], ["Cheese Burger", "Burgers", 560], ["Double Cheese Burger", "Burgers", 640], ["Special Truth Burger", "Burgers", 680], ["Vegetable Pizza", "Pizza", 520], ["Margarita Pizza", "Pizza", 580], ["Tuna with Vegetable Pizza", "Pizza", 590], ["Tuna Pizza", "Pizza", 620], ["Beef Pizza", "Pizza", 660], ["Chicken Pizza", "Pizza", 690], ["Truth Special Pizza", "Pizza", 790], ["Pasta with Tomato Sauce", "Pasta", 340], ["Pasta with Vegetable", "Pasta", 340], ["Pasta with Tuna", "Pasta", 430], ["Pasta with Meat Sauce", "Pasta", 410], ["Macaroni with Cheese", "Pasta", 360]];
+const KEY='truthcafe-sample-v3';
+const fresh=()=>{const s={ings:[],menu:MENU.map((m,i)=>({id:'m'+i,name:m[0],cat:m[1],price:m[2],rec:[]})),sales:[],moves:[],exp:[],n:0};
+ const U={'Pizza Dough':'g','Mozzarella':'g','Chicken':'g','Egg':'pcs','Ham':'g','Beef':'g','Tomato Sauce':'g','Olive':'pcs','Olive (g)':'g','Tuna':'g'};
+ Object.keys(U).forEach(n=>s.ings.push({id:'i'+(++s.n),name:n,unit:U[n],stock:0,min:0,cost:0}));
+ const R={'Truth Special Pizza':{'Pizza Dough':300,'Mozzarella':140,'Chicken':40,'Egg':1,'Ham':20,'Beef':40,'Tomato Sauce':50,'Olive':5},'Margarita Pizza':{'Pizza Dough':300,'Mozzarella':140,'Tomato Sauce':50,'Olive (g)':10},'Tuna Pizza':{'Pizza Dough':300,'Mozzarella':110,'Tuna':45,'Tomato Sauce':50,'Olive':5}};
+ Object.keys(R).forEach(k=>{const m=s.menu.find(x=>x.name===k);m.rec=Object.keys(R[k]).map(n=>[s.ings.find(i=>i.name===n).id,R[k][n]])});return s};
+let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}S=S||fresh();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const FACT={kg:['g',1000],g:['g',1],l:['ml',1000],ml:['ml',1]};
+const toBase=(q,u,b)=>{const[x,f]=FACT[u]||[u,1];if(x!==b)throw Error('Cannot convert '+u+' to '+b);return q*f};
+const unitsFor=b=>{const u=Object.keys(FACT).filter(k=>FACT[k][0]===b);return u.length?u:[b]};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const etb=n=>'ETB '+(+n).toLocaleString('en-US',{maximumFractionDigits:2});
+const r2=n=>+(+n).toFixed(3);
+const fmt=(q,u)=>u==='g'&&q>=1000?r2(q/1000)+' kg':u==='ml'&&q>=1000?r2(q/1000)+' l':r2(q)+' '+u;
+const ing=id=>S.ings.find(i=>i.id===id);
+const cost=m=>m.rec.reduce((s,[i,q])=>s+q*(ing(i)?.cost||0),0);
+const servings=m=>m.rec.length?Math.max(0,Math.floor(Math.min(...m.rec.map(([i,q])=>ing(i).stock/q)))):null;
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const cats=()=>[...new Set(S.menu.map(m=>m.cat))];
+let tab='sell',cart={},note=null,cat='Juices',ed=null,sq='',ei=null;
+const tabs=[['sell','Sell'],['menu','Menu & recipes'],['stock','Stock'],['exp','Expenses'],['dash','Dashboard']];
+const Note=()=>note?`<div class="msg ${note.e?'e':''}">${note.t}</div>`:'';
+const chips=()=>`<div class="chips">${cats().map(c=>`<button class="${c===cat?'on':''}" data-cat="${esc(c)}">${esc(c)}</button>`).join('')}</div>`;
+const unitSel=(id,b,v)=>`<select id="${id}">${unitsFor(b).map(u=>`<option ${u===v?'selected':''}>${u}</option>`).join('')}</select>`;
+
+function render(){
+ $('#nav').innerHTML=tabs.map(([k,l])=>`<button role="tab" aria-selected="${tab===k}" data-t="${k}">${l}</button>`).join('')+`<button data-t="reset" style="margin-left:auto">Reset sample</button>`;
+ $('#nav').onclick=e=>{const t=e.target.dataset.t;if(!t)return;if(t==='reset'){if(!confirm('Erase all sample data and start over?'))return;S=fresh();cart={};ed=null;save()}else{tab=t;ed=null;ei=null}note=null;render()};
+ $('#app').innerHTML={sell,menu,stock,exp,dash}[tab]();bind();
+}
+const grid=()=>{const q=sq.trim().toLowerCase();const list=q?S.menu.filter(m=>m.name.toLowerCase().includes(q)||m.cat.toLowerCase().includes(q)):S.menu.filter(m=>m.cat===cat);return list.length?list.map(m=>{const n=servings(m);return `<button data-add="${m.id}"><b>${esc(m.name)}</b>${etb(m.price)}<br><small class="${n===0?'low':''}">${n===null?'no recipe':n===0?'Out of stock':n+' left'}</small></button>`}).join(''):'<p>No items match your search.</p>'};
+function sell(){
+ const lines=S.menu.filter(m=>cart[m.id]>0),total=lines.reduce((s,m)=>s+m.price*cart[m.id],0);
+ return `<section><h2>Menu</h2><div class="row"><input id="sq" type="search" placeholder="Search menu…" value="${esc(sq)}" aria-label="Search menu" style="flex:1;min-width:200px"></div>${chips()}<div class="menu" id="grid">${grid()}</div></section>
+ <section><h2>Order</h2>${lines.length?lines.map(m=>`<div class="row"><b style="flex:1">${esc(m.name)}</b><button class="btn" data-dec="${m.id}" aria-label="Remove one">−</button><b>${cart[m.id]}</b><button class="btn" data-add="${m.id}" aria-label="Add one">+</button><span>${etb(m.price*cart[m.id])}</span></div>${m.rec.length?'':`<div class="low">${esc(m.name)} has no recipe: no stock will be deducted.</div>`}`).join(''):'<p>Tap a menu item to start an order.</p>'}
+ <div class="row"><select id="pay"><option>Cash</option><option>Telebirr</option><option>CBE Birr</option></select></div>
+ <h2>Total: ${etb(total)}</h2><button class="btn g" id="confirm" ${lines.length?'':'disabled'}>Confirm sale</button>${Note()}</section>`;
+}
+function menu(){
+ let editor='';
+ if(ed){const m=S.menu.find(x=>x.id===ed.id);
+  const c=ed.rec.reduce((s,l)=>{const i=ing(l.i);try{return s+(i&&l.q?toBase(+l.q,l.u,i.unit)*i.cost:0)}catch(e){return s}},0);
+  editor=`<section><h2>Edit ${esc(m.name)}</h2><div class="row"><input id="en" value="${esc(ed.name)}"><input id="ec2" list="cl" placeholder="Category" value="${esc(ed.cat)}"><datalist id="cl">${cats().map(c=>`<option>${esc(c)}</option>`).join('')}</datalist><input id="ep" type="number" min="0" step="any" value="${ed.price}" style="width:120px"> ETB</div>
+  <h2>Recipe (per serving)</h2>${S.ings.length?'':'<p class="low">Add ingredients in the Stock tab first.</p>'}
+  ${ed.rec.map((l,k)=>`<div class="row"><select data-k="${k}" data-f="i"><option value="">Ingredient…</option>${S.ings.map(i=>`<option value="${i.id}" ${i.id===l.i?'selected':''}>${esc(i.name)}</option>`).join('')}</select><input data-k="${k}" data-f="q" type="number" min="0" step="any" placeholder="Amount" value="${l.q}" style="width:110px">${l.i?`<select data-k="${k}" data-f="u">${unitsFor(ing(l.i).unit).map(u=>`<option ${u===l.u?'selected':''}>${u}</option>`).join('')}</select>`:''}<button class="btn d" data-rm="${k}" aria-label="Remove ingredient">✕</button></div>`).join('')}
+  <div class="row"><button class="btn" id="addl">+ Ingredient</button></div>
+  <p>Ingredient cost: <b>${etb(c)}</b> · Profit per serving: <b>${etb(ed.price-c)}</b></p>
+  <div class="row"><button class="btn g" id="saveit">Save</button><button class="btn" id="cancel">Cancel</button><button class="btn d" id="delit">Delete item</button></div>${Note()}</section>`}
+ return editor+`<section><h2>All items are editable</h2><div class="row"><button class="btn g" id="newit">+ New menu item</button></div>${chips()}<div class="scroll"><table><tr><th>Item</th><th>Price</th><th>Recipe</th><th></th></tr>${S.menu.filter(m=>m.cat===cat).map(m=>`<tr><td>${esc(m.name)}</td><td>${etb(m.price)}</td><td>${m.rec.length?m.rec.length+' ingredients, cost '+etb(cost(m)):'<span class="low">none yet</span>'}</td><td><button class="btn" data-edit="${m.id}">Edit</button></td></tr>`).join('')}</table></div></section>`;
+}
+const ingEditor=()=>{if(!ei)return'';const i=ing(ei);return `<section><h2>Edit ${esc(i.name)}</h2><div class="row"><input id="xn" value="${esc(i.name)}"><input id="xm" type="number" min="0" step="any" value="${r2(i.min)}" style="width:120px"> ${i.unit} minimum</div><div class="row"><input id="xs" type="number" min="0" step="any" placeholder="Counted stock (${i.unit})" style="width:210px"><small>Leave empty to keep ${fmt(i.stock,i.unit)}. A new count is saved as a correction in the history.</small></div><div class="row"><button class="btn g" id="xsave">Save</button><button class="btn d" id="xdel">Delete ingredient</button><button class="btn" id="xcancel">Cancel</button></div></section>`};
+function stock(){
+ return `<section><h2>New ingredient</h2><div class="row"><input id="in" placeholder="Name (e.g. Eggs)"><select id="iu"><option>g</option><option>ml</option><option>pcs</option><option>slice</option></select>
+ <input id="im" type="number" min="0" step="any" placeholder="Minimum stock" style="width:150px"><button class="btn g" id="addi">Add ingredient</button></div><small>Base unit is how stock is counted. You can buy in kg or l and it converts.</small></section>
+ <section><h2>Record purchase</h2>${S.ings.length?`<div class="row"><select id="pi">${S.ings.map(i=>`<option value="${i.id}">${esc(i.name)}</option>`).join('')}</select><input id="pq" type="number" min="0" step="any" placeholder="Quantity" style="width:120px"><span id="pus"></span><input id="pc" type="number" min="0" step="any" placeholder="Total price ETB" style="width:150px"><button class="btn g" id="buy">Add stock</button></div>`:'<p>Add an ingredient first.</p>'}${Note()}</section>
+ ${ingEditor()}<section><h2>Current stock</h2><div class="row"><button class="btn d" id="zeroall">Set all stock to 0</button></div><div class="scroll"><table><tr><th>Ingredient</th><th>Stock</th><th>Minimum</th><th></th></tr>${S.ings.map(i=>`<tr><td>${esc(i.name)}</td><td class="${i.stock<i.min?'low':''}">${fmt(i.stock,i.unit)}${i.stock<i.min?' – buy more':''}</td><td>${fmt(i.min,i.unit)}</td><td><button class="btn" data-ei="${i.id}">Edit</button></td></tr>`).join('')||'<tr><td>No ingredients yet.</td></tr>'}</table></div></section>
+ <section><h2>Stock history</h2><div class="scroll"><table>${S.moves.slice(-10).reverse().map(m=>`<tr><td>${m.t}</td><td>${esc(m.n)}</td><td>${m.d>0?'+':''}${r2(m.d)}</td><td>${r2(m.b)} → ${r2(m.a)}</td></tr>`).join('')||'<tr><td>No changes yet.</td></tr>'}</table></div></section>`;
+}
+function exp(){
+ return `<section><h2>Add expense</h2><div class="row"><select id="ec">${['Rent','Electricity','Water','Salaries','Internet','Transport','Repairs','Other'].map(c=>`<option>${c}</option>`).join('')}</select><input id="ea" type="number" min="0" step="any" placeholder="Amount ETB" style="width:150px"><button class="btn g" id="adde">Save expense</button></div>${Note()}</section>
+ <section><h2>Expenses</h2><table>${S.exp.map((x,k)=>`<tr><td>${x.t}</td><td>${esc(x.c)}</td><td>${etb(x.a)}</td><td><button class="btn" data-xe="${k}">Edit</button> <button class="btn d" data-xd="${k}">Delete</button></td></tr>`).join('')||'<tr><td>No expenses yet.</td></tr>'}</table></section>`;
+}
+function dash(){
+ const rev=S.sales.reduce((s,x)=>s+x.total,0),cg=S.sales.reduce((s,x)=>s+x.cogs,0),ex=S.exp.reduce((s,x)=>s+x.a,0),low=S.ings.filter(i=>i.stock<i.min),nr=S.menu.filter(m=>!m.rec.length).length;
+ return `<div class="kpis"><div><span>Sales</span><b>${etb(rev)}</b></div><div><span>Ingredient cost used</span><b>${etb(cg)}</b></div><div><span>Gross profit</span><b>${etb(rev-cg)}</b></div><div><span>Expenses</span><b>${etb(ex)}</b></div><div><span>Net profit</span><b>${etb(rev-cg-ex)}</b></div><div><span>Items sold</span><b>${S.sales.reduce((s,x)=>s+x.qty,0)}</b></div></div>
+ ${nr?`<section class="low">${nr} menu items have no recipe yet. Their sales deduct no stock and show no ingredient cost.</section>`:''}
+ <section><h2>Shopping list</h2>${low.length?low.map(i=>`<div class="low">${esc(i.name)}: ${fmt(i.stock,i.unit)} left (minimum ${fmt(i.min,i.unit)})</div>`).join(''):'No low-stock ingredients.'}</section>
+ <section><h2>Recent sales</h2><table>${S.sales.slice(-6).reverse().map(x=>`<tr><td>${x.t}</td><td>${x.qty} items</td><td>${etb(x.total)}</td><td>${x.pay}</td><td>${x.id?`<button class="btn d" data-vs="${x.id}">Void</button>`:''}</td></tr>`).join('')||'<tr><td>No sales yet.</td></tr>'}</table></section>`;
+}
+function sync(){if(!ed)return;ed.name=$('#en').value;ed.cat=$('#ec2').value;ed.price=+$('#ep').value||0;$$('[data-k]').forEach(el=>{const l=ed.rec[+el.dataset.k];if(l)l[el.dataset.f]=el.value});ed.rec.forEach(l=>{if(l.i&&!unitsFor(ing(l.i).unit).includes(l.u))l.u=ing(l.i).unit})}
+function bind(){
+ $$('[data-cat]').forEach(b=>b.onclick=()=>{cat=b.dataset.cat;sq='';render()});
+ const sqe=$('#sq');if(sqe)sqe.oninput=()=>{sq=sqe.value;$('#grid').innerHTML=grid();$$('#grid [data-add]').forEach(b=>b.onclick=()=>{cart[b.dataset.add]=(cart[b.dataset.add]||0)+1;note=null;render()})};
+ $$('[data-add]').forEach(b=>b.onclick=()=>{cart[b.dataset.add]=(cart[b.dataset.add]||0)+1;note=null;render()});
+ $$('[data-dec]').forEach(b=>b.onclick=()=>{cart[b.dataset.dec]=Math.max(0,cart[b.dataset.dec]-1);render()});
+ const g=(id,f)=>{const e=$('#'+id);if(e)e.onclick=f};
+ g('confirm',confirmSale);g('buy',buy);g('addi',addIng);g('adde',addExp);
+ $$('[data-edit]').forEach(b=>b.onclick=()=>{const m=S.menu.find(x=>x.id===b.dataset.edit);ed={id:m.id,name:m.name,cat:m.cat,price:m.price,rec:m.rec.map(([i,q])=>({i,q,u:ing(i).unit}))};note=null;render()});
+ g('addl',()=>{sync();ed.rec.push({i:'',q:'',u:''});render()});
+ $$('[data-rm]').forEach(b=>b.onclick=()=>{sync();ed.rec.splice(+b.dataset.rm,1);render()});
+ $$('select[data-f="i"]').forEach(s=>s.onchange=()=>{sync();const l=ed.rec[+s.dataset.k];l.u=l.i?ing(l.i).unit:'';render()});
+ g('cancel',()=>{ed=null;render()});g('saveit',saveItem);
+ g('newit',()=>{const m={id:'x'+Date.now(),name:'New item',cat,price:0,rec:[]};S.menu.push(m);ed={id:m.id,name:m.name,cat:m.cat,price:0,rec:[]};note=null;render()});
+ g('delit',()=>{if(!confirm('Delete this menu item? Past sales stay in the totals.'))return;S.menu=S.menu.filter(m=>m.id!==ed.id);delete cart[ed.id];ed=null;if(!cats().includes(cat))cat=cats()[0]||'';save();render()});
+ $$('[data-ei]').forEach(b=>b.onclick=()=>{ei=b.dataset.ei;render()});
+ g('xcancel',()=>{ei=null;render()});
+ g('zeroall',()=>{if(!confirm('Set the stock of every ingredient to 0? Each change is saved in the stock history.'))return;S.ings.forEach(i=>{if(i.stock!==0)move(i,-i.stock,'zeroed')});save();render()});
+ g('xsave',()=>{const i=ing(ei),n=$('#xn').value.trim(),mn=+$('#xm').value;if(!n||!(mn>=0))return alert('Enter a name and a valid minimum.');if(S.ings.some(x=>x!==i&&x.name.toLowerCase()===n.toLowerCase()))return alert('Another ingredient has that name.');const c=$('#xs').value;if(c!==''&&!(+c>=0))return alert('Enter a valid counted stock.');i.name=n;i.min=mn;if(c!==''&&+c!==i.stock)move(i,+c-i.stock,'count correction');save();ei=null;render()});
+ g('xdel',()=>{const i=ing(ei);if(S.menu.some(m=>m.rec.some(r=>r[0]===i.id)))return alert('This ingredient is used in a recipe. Remove it from those recipes first.');if(confirm('Delete '+i.name+'?')){S.ings=S.ings.filter(x=>x!==i);save();ei=null;render()}});
+ $$('[data-xe]').forEach(b=>b.onclick=()=>{const x=S.exp[+b.dataset.xe],v=prompt('Amount (ETB) for '+x.c,x.a);if(v===null)return;const c=prompt('Category',x.c);if(!(+v>0)||!c)return alert('Enter an amount above 0 and a category.');x.a=+v;x.c=c;save();render()});
+ $$('[data-xd]').forEach(b=>b.onclick=()=>{if(confirm('Delete this expense?')){S.exp.splice(+b.dataset.xd,1);save();render()}});
+ $$('[data-vs]').forEach(b=>b.onclick=()=>{const k=S.sales.findIndex(s=>s.id==b.dataset.vs),s=S.sales[k];if(!s||!confirm('Void this sale and put its ingredients back in stock?'))return;Object.keys(s.need||{}).forEach(id=>{const i=ing(id);if(i)move(i,s.need[id],'void')});S.sales.splice(k,1);save();render()});
+ const pi=$('#pi');if(pi){const fill=()=>{$('#pus').innerHTML=unitSel('pu',ing(pi.value).unit)};pi.onchange=fill;fill()}
+}
+function saveItem(){
+ sync();try{
+  if(!ed.name.trim())throw Error('Enter a name.');if(!(ed.price>=0))throw Error('Enter a valid price.');
+  const rec=ed.rec.filter(l=>l.i).map(l=>{const q=toBase(+l.q,l.u,ing(l.i).unit);if(!(q>0))throw Error('Every ingredient needs an amount above 0.');return[l.i,q]});
+  const m=S.menu.find(x=>x.id===ed.id);m.name=ed.name.trim();m.cat=ed.cat.trim()||m.cat;m.price=ed.price;m.rec=rec;save();ed=null;note=null;
+ }catch(e){note={t:e.message,e:1}}render();
+}
+function move(i,d,why){const b=i.stock;i.stock=b+d;S.moves.push({t:new Date().toLocaleTimeString(),n:i.name+' ('+why+')',d,b,a:i.stock})}
+function confirmSale(){
+ const lines=S.menu.filter(m=>cart[m.id]>0),need={};
+ lines.forEach(m=>m.rec.forEach(([i,q])=>need[i]=(need[i]||0)+q*cart[m.id]));
+ const short=Object.keys(need).filter(i=>ing(i).stock<need[i]);
+ if(short.length&&!confirm('Not enough stock:\n'+short.map(i=>`${ing(i).name}: have ${fmt(ing(i).stock,ing(i).unit)}, need ${fmt(need[i],ing(i).unit)}`).join('\n')+'\n\nSell anyway? (manager override)'))return;
+ const msgs=[];let total=0,cg=0,qty=0;
+ Object.keys(need).forEach(id=>{const i=ing(id),b=i.stock;move(i,-need[id],'sale');msgs.push(`${esc(i.name)} used: ${fmt(need[id],i.unit)}. Previous stock: ${fmt(b,i.unit)}. Remaining stock: ${fmt(i.stock,i.unit)}.`)});
+ lines.forEach(m=>{total+=m.price*cart[m.id];cg+=cost(m)*cart[m.id];qty+=cart[m.id]});
+ S.sales.push({id:Date.now(),t:new Date().toLocaleTimeString(),total,cogs:cg,qty,pay:$('#pay').value,need});
+ note={t:'<b>Sale saved: '+etb(total)+'</b><br>'+lines.map(m=>cart[m.id]+' '+esc(m.name)+' sold.').join('<br>')+(msgs.length?'<br>'+msgs.join('<br>'):'<br>No ingredients deducted (no recipes set).')};
+ cart={};save();render();
+}
+function addIng(){
+ const n=$('#in').value.trim(),u=$('#iu').value,mn=+$('#im').value||0;
+ if(!n)note={t:'Enter an ingredient name.',e:1};else if(S.ings.some(i=>i.name.toLowerCase()===n.toLowerCase()))note={t:'That ingredient already exists.',e:1};
+ else{S.ings.push({id:'i'+(++S.n),name:n,unit:u,stock:0,min:mn,cost:0});note={t:n+' added. Now record a purchase to add stock.'};save()}
+ render();
+}
+function buy(){
+ try{const i=ing($('#pi').value),q=+$('#pq').value;if(!(q>0))throw Error('Enter a quantity above 0.');
+  const n=toBase(q,$('#pu').value,i.unit),tot=+$('#pc').value||0;
+  i.cost=(Math.max(i.stock,0)*i.cost+tot)/(Math.max(i.stock,0)+n);move(i,n,'purchase');
+  note={t:`Added ${fmt(n,i.unit)} of ${esc(i.name)}. Stock is now ${fmt(i.stock,i.unit)}.`};save();
+ }catch(e){note={t:e.message,e:1}}render();
+}
+function addExp(){
+ const a=+$('#ea').value;if(!(a>0)){note={t:'Enter an amount above 0.',e:1}}else{S.exp.push({t:new Date().toLocaleTimeString(),c:$('#ec').value,a});note={t:'Expense saved.'};save()}render();
+}
+render();
+</script></body></html>
