@@ -62,8 +62,8 @@ const chips=()=>`<div class="chips">${cats().map(c=>`<button class="${c===cat?'o
 const unitSel=(id,b,v)=>`<select id="${id}">${unitsFor(b).map(u=>`<option ${u===v?'selected':''}>${u}</option>`).join('')}</select>`;
 
 function render(){
- $('#nav').innerHTML=tabs.map(([k,l])=>`<button role="tab" aria-selected="${tab===k}" data-t="${k}">${l}</button>`).join('')+`<button data-t="reset" style="margin-left:auto">Reset sample</button>`;
- $('#nav').onclick=e=>{const t=e.target.dataset.t;if(!t)return;if(t==='reset'){if(!confirm('Erase all sample data and start over?'))return;S=fresh();cart={};ed=null;save()}else{tab=t;ed=null;ei=null}note=null;render()};
+ $('#nav').innerHTML=tabs.map(([k,l])=>`<button role="tab" aria-selected="${tab===k}" data-t="${k}">${l}</button>`).join('')+`<button data-t="reset" style="margin-left:auto">Reset sample</button><button data-t="logout">Log out</button>`;
+ $('#nav').onclick=e=>{const t=e.target.dataset.t;if(!t)return;if(t==='logout'){authed=false;try{sessionStorage.removeItem('tc-auth')}catch(x){}login();return}if(t==='reset'){if(!confirm('Erase all sample data and start over?'))return;S=fresh();cart={};ed=null;save()}else{tab=t;ed=null;ei=null}note=null;render()};
  $('#app').innerHTML={sell,menu,stock,exp,dash}[tab]();bind();
 }
 const grid=()=>{const q=sq.trim().toLowerCase();const list=q?S.menu.filter(m=>m.name.toLowerCase().includes(q)||m.cat.toLowerCase().includes(q)):S.menu.filter(m=>m.cat===cat);return list.length?list.map(m=>{const n=servings(m);return `<button data-add="${m.id}"><b>${esc(m.name)}</b>${etb(m.price)}<br><small class="${n===0?'low':''}">${n===null?'no recipe':n===0?'Out of stock':n+' left'}</small></button>`}).join(''):'<p>No items match your search.</p>'};
@@ -166,5 +166,13 @@ function buy(){
 function addExp(){
  const a=+$('#ea').value;if(!(a>0)){note={t:'Enter an amount above 0.',e:1}}else{S.exp.push({t:new Date().toLocaleTimeString(),c:$('#ec').value,a});note={t:'Expense saved.'};save()}render();
 }
-render();
+const HASH='8e6fdaabdd09dfdf9166cd5c30c84989c7e13140c95f4da9e3f43fce813a0111';
+const sha=async s=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)))].map(b=>b.toString(16).padStart(2,'0')).join('');
+let authed=false;try{authed=sessionStorage.getItem('tc-auth')==='1'}catch(e){}
+function login(msg){
+ $('#nav').innerHTML='';
+ $('#app').innerHTML=`<section style="max-width:380px;margin:40px auto"><h2>Sign in</h2><div class="row"><input id="lu" placeholder="Username" autocomplete="username" style="width:100%"></div><div class="row"><input id="lp" type="password" placeholder="Password" autocomplete="current-password" style="width:100%"></div><div class="row"><button class="btn g" id="lgo">Sign in</button></div>${msg?`<div class="msg e">${msg}</div>`:''}</section>`;
+ const go=async()=>{try{const h=await sha($('#lu').value.trim().toLowerCase()+':'+$('#lp').value);if(h===HASH){authed=true;try{sessionStorage.setItem('tc-auth','1')}catch(e){}render()}else login('Wrong username or password.')}catch(e){login('Sign-in needs a secure (https) page or a modern browser.')}};
+ $('#lgo').onclick=go;$('#lp').onkeydown=e=>{if(e.key==='Enter')go()};$('#lu').focus()}
+authed?render():login();
 </script></body></html>
